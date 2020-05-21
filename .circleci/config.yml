@@ -5,12 +5,20 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: docker:18.05.0-ce
+      - image: docker:19.03.9
     steps:
       - checkout
-      - run: make build
+      - setup_remote_docker
+      - run:
+          name: Add make
+          command: |
+            apk update
+            apk add make=4.2.1-r2
+      - run:
+          name: Build image
+          command: make build/image
 
 workflows:
-  build:
+  app:
     jobs:
       - build

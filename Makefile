@@ -1,10 +1,19 @@
 SHELL            =   /bin/sh
-docs             :=  $(shell find docs -type f)
-src              :=  $(shell find src -type f)
-tests            :=  $(shell find tests -type f)
+# .SHELLFLAGS      =   -eo pipefail
+
+docker           :=  docker
+docs             :=  $(shell find docs -type f 2>/dev/null)
+src              :=  $(shell find src -type f 2>/dev/null)
+tests            :=  $(shell find tests -type f 2>/dev/null)
+
+IMAGE_NAME       ?=  app/app
+IMAGE_TAG        ?=  latest
 
 .SUFFIXES:
-.PHONY: clean
+.PHONY: clean \
+	print_env \
+	test \
+	node_modules
 
 all: build
 
@@ -24,6 +33,20 @@ build/coverage: $(tests)
 	@echo Build coverage
 	mkdir -vp build/coverage
 	cp -va tests/. build/coverage
+
+build/image:
+	@echo Build docker image
+	$(docker) build -t $(IMAGE_NAME):$(IMAGE_TAG) .
+
+node_modules:
+	@echo Install dependencies
+
+test:
+	@echo Run tests
+
+print_env:
+	@echo Print environment
+	printenv
 
 clean:
 	@echo Clean
