@@ -8,7 +8,7 @@ jobs:
       - image: docker:18.05.0-ce
     steps:
       - checkout
-      - make build
+      - run: make build
 
 workflows:
   build:
