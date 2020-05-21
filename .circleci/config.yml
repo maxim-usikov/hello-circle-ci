@@ -4,6 +4,8 @@ version: 2.1
 
 jobs:
   build:
+    docker:
+      - image: docker:18.05.0-ce
     steps:
       - checkout
       - make build
